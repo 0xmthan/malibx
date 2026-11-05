@@ -1,0 +1,120 @@
+site_name: malibx
+site_description: A tiny window and pixel library for Python, with a MiniLibX-style API.
+site_url: https://0xmthan.github.io/malibx/
+repo_url: https://github.com/0xmthan/malibx
+repo_name: 0xmthan/malibx
+edit_uri: edit/main/docs/
+copyright: MIT licensed
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - Installation: getting-started/installation.md
+      - Your first window: getting-started/first-window.md
+      - The main loop: getting-started/the-loop.md
+      - Drawing: getting-started/drawing.md
+      - Keyboard and mouse: getting-started/input.md
+  - API reference:
+      - reference/index.md
+      - Setup and loop:
+          - init: reference/init.md
+          - loop: reference/loop.md
+          - loop_hook: reference/loop_hook.md
+          - loop_end: reference/loop_end.md
+      - Windows and drawing:
+          - new_window: reference/new_window.md
+          - clear_window: reference/clear_window.md
+          - pixel_put: reference/pixel_put.md
+          - string_put: reference/string_put.md
+          - set_font: reference/set_font.md
+      - Images:
+          - new_image: reference/new_image.md
+          - get_data_addr: reference/get_data_addr.md
+          - put_image_to_window: reference/put_image_to_window.md
+          - destroy_image: reference/destroy_image.md
+          - xpm_file_to_image: reference/xpm_file_to_image.md
+          - xpm_to_image: reference/xpm_to_image.md
+      - Events:
+          - hook: reference/hook.md
+          - key_hook: reference/key_hook.md
+          - mouse_hook: reference/mouse_hook.md
+          - expose_hook: reference/expose_hook.md
+
+theme:
+  name: material
+  logo: assets/logo.png
+  favicon: assets/logo.png
+  font:
+    text: Inter
+    code: JetBrains Mono
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to system preference
+  features:
+    - navigation.instant
+    - navigation.sections
+    - navigation.footer
+    - navigation.top
+    - navigation.indexes
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.action.edit
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/0xmthan/malibx
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/malibx/
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true

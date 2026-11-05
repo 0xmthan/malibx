@@ -30,6 +30,8 @@ pub(crate) struct Mlx {
 }
 
 /// mlx_init
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/init/
 #[pyfunction]
 pub(crate) fn init() -> Mlx {
     Mlx {
@@ -42,6 +44,8 @@ pub(crate) fn init() -> Mlx {
 }
 
 /// mlx_loop_hook: `f(param)` is called once per frame.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/loop_hook/
 #[pyfunction]
 #[pyo3(signature = (mlx, f, param=None))]
 pub(crate) fn loop_hook(
@@ -55,12 +59,16 @@ pub(crate) fn loop_hook(
 }
 
 /// mlx_loop_end: makes `loop` return after the current frame.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/loop_end/
 #[pyfunction]
 pub(crate) fn loop_end(mlx: PyRef<'_, Mlx>) {
     mlx.inner.borrow_mut().end_loop = true;
 }
 
 /// mlx_loop: runs until loop_end is called or every window is closed.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/loop/
 #[pyfunction]
 #[pyo3(name = "loop")]
 pub(crate) fn run_loop(mlx: PyRef<'_, Mlx>, py: Python<'_>) -> PyResult<()> {

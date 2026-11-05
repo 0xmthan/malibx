@@ -39,6 +39,8 @@ impl Image {
 }
 
 /// mlx_new_image: a black width x height image.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/new_image/
 #[pyfunction]
 pub(crate) fn new_image(
     mlx: PyRef<'_, Mlx>,
@@ -61,6 +63,8 @@ pub(crate) fn new_image(
 /// mlx_get_data_addr: returns (buffer, bits_per_pixel, size_line, endian).
 /// `buffer` is a writable memoryview; pixel (x, y) starts at
 /// `y * size_line + x * (bits_per_pixel // 8)` and is stored as B, G, R, A.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/get_data_addr/
 #[pyfunction]
 pub(crate) fn get_data_addr<'py>(
     img: PyRef<'py, Image>,
@@ -72,6 +76,8 @@ pub(crate) fn get_data_addr<'py>(
 
 /// mlx_put_image_to_window: copies the image into the window at (x, y),
 /// clipped to the window edges. Pixels with alpha 0xFF are transparent.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/put_image_to_window/
 #[pyfunction]
 pub(crate) fn put_image_to_window(
     mlx: PyRef<'_, Mlx>,
@@ -101,6 +107,8 @@ pub(crate) fn put_image_to_window(
 }
 
 /// mlx_destroy_image: frees the image. Using it afterwards raises an error.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/destroy_image/
 #[pyfunction]
 pub(crate) fn destroy_image(mlx: PyRef<'_, Mlx>, mut img: PyRefMut<'_, Image>) {
     let _ = mlx; // kept for the MiniLibX signature

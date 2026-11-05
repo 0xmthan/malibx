@@ -39,6 +39,8 @@ pub(crate) struct Window {
 }
 
 /// mlx_new_window
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/new_window/
 #[pyfunction]
 pub(crate) fn new_window(
     mlx: &Bound<'_, Mlx>,
@@ -68,6 +70,8 @@ pub(crate) fn new_window(
 }
 
 /// mlx_clear_window: fills the window with black.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/clear_window/
 #[pyfunction]
 pub(crate) fn clear_window(mlx: PyRef<'_, Mlx>, win: PyRef<'_, Window>) -> PyResult<()> {
     mlx.inner.borrow_mut().win(&win)?.buffer.fill(0);
@@ -75,6 +79,8 @@ pub(crate) fn clear_window(mlx: PyRef<'_, Mlx>, win: PyRef<'_, Window>) -> PyRes
 }
 
 /// mlx_pixel_put: color is 0xRRGGBB. Pixels outside the window are ignored.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/pixel_put/
 #[pyfunction]
 pub(crate) fn pixel_put(
     mlx: PyRef<'_, Mlx>,

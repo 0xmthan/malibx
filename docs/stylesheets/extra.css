@@ -1,0 +1,155 @@
+/* malibx theme: neutral grays, one blue for links. */
+
+/* Light */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #ffffff;
+  --md-primary-fg-color--light: #ffffff;
+  --md-primary-fg-color--dark: #f4f4f5;
+  --md-primary-bg-color: #18181b;
+  --md-primary-bg-color--light: #52525b;
+  --md-accent-fg-color: #1d4ed8;
+  --md-typeset-a-color: #2563eb;
+  --md-default-fg-color: #18181b;
+  --md-code-bg-color: #f4f4f5;
+}
+
+/* Dark */
+[data-md-color-scheme="slate"] {
+  --md-hue: 240;
+  --md-primary-fg-color: #18181b;
+  --md-primary-fg-color--light: #18181b;
+  --md-primary-fg-color--dark: #09090b;
+  --md-primary-bg-color: #fafafa;
+  --md-primary-bg-color--light: #a1a1aa;
+  --md-default-bg-color: #18181b;
+  --md-default-bg-color--light: #27272a;
+  --md-default-fg-color: #e4e4e7;
+  --md-code-bg-color: #232326;
+  --md-accent-fg-color: #93c5fd;
+  --md-typeset-a-color: #60a5fa;
+}
+
+/* Header and tabs: same color as the page, separated by a thin line. */
+.md-header,
+.md-tabs {
+  box-shadow: none;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+.md-header__title {
+  font-weight: 700;
+}
+
+/* Search box readable on a light header. */
+[data-md-color-scheme="default"] .md-search__form {
+  background-color: #f4f4f5;
+}
+[data-md-color-scheme="default"] .md-search__input::placeholder,
+[data-md-color-scheme="default"] .md-search__icon {
+  color: #71717a;
+}
+
+/* Calmer headings. */
+.md-typeset h1 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--md-default-fg-color);
+}
+.md-typeset h2 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: 2.2em;
+}
+
+/* Tables: no heavy borders. */
+.md-typeset table:not([class]) {
+  font-size: 0.75rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  box-shadow: none;
+}
+.md-typeset table:not([class]) th {
+  background: var(--md-code-bg-color);
+}
+
+/* Keep pixel art crisp. */
+.md-header__button.md-logo img,
+.md-nav__button.md-logo img,
+img.pixel {
+  image-rendering: pixelated;
+}
+
+/* Home page hero. */
+.mx-hero {
+  text-align: center;
+  margin: 2rem 0 2.5rem;
+}
+.mx-hero img {
+  width: 112px;
+  height: 112px;
+  image-rendering: pixelated;
+}
+.mx-hero h1 {
+  font-size: 2.6rem;
+  margin: 0.6rem 0 0.4rem;
+}
+.mx-hero p {
+  max-width: 34rem;
+  margin: 0 auto 1.2rem;
+  font-size: 0.95rem;
+  color: var(--md-default-fg-color--light);
+}
+.mx-hero .md-button {
+  margin: 0.2rem;
+}
+
+/* Feature cards: flat, thin border. */
+.md-typeset .grid.cards > ul > li {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  box-shadow: none;
+}
+.md-typeset .grid.cards > ul > li:hover {
+  border-color: var(--md-default-fg-color--lighter);
+  box-shadow: none;
+}
+
+/* Color swatch: <span class="mx-swatch" style="--c:#ff0000"></span> */
+.mx-swatch {
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  border-radius: 2px;
+  vertical-align: -0.1em;
+  background: var(--c);
+  box-shadow: 0 0 0 1px rgba(127, 127, 127, 0.4);
+}
+
+/* Primary button: solid blue (the header color is white/near-black). */
+.md-typeset .md-button--primary {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
+.md-typeset .md-button--primary:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+  color: #ffffff;
+}
+
+/* Secondary button: outlined in the text color (Material uses the header
+   color, which is white in light mode and hid the button). */
+.md-typeset .md-button:not(.md-button--primary) {
+  color: var(--md-default-fg-color);
+  border-color: var(--md-default-fg-color--lighter);
+}
+.md-typeset .md-button:not(.md-button--primary):hover {
+  color: var(--md-default-fg-color);
+  background-color: var(--md-default-fg-color--lightest);
+  border-color: var(--md-default-fg-color--light);
+}
+
+/* "MiniLibX: mlx_xxx" line under API page titles. */
+.mx-mlx {
+  font-size: 0.75rem;
+  color: var(--md-default-fg-color--light);
+  margin-top: -0.6rem;
+}

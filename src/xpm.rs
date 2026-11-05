@@ -136,6 +136,8 @@ fn load(py: Python<'_>, lines: &[String]) -> PyResult<(Image, usize, usize)> {
 }
 
 /// mlx_xpm_to_image: XPM data (its strings, as a list) -> (image, width, height).
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/xpm_to_image/
 #[pyfunction]
 pub(crate) fn xpm_to_image(
     mlx: PyRef<'_, Mlx>,
@@ -147,6 +149,8 @@ pub(crate) fn xpm_to_image(
 }
 
 /// mlx_xpm_file_to_image: an `.xpm` file -> (image, width, height).
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/xpm_file_to_image/
 #[pyfunction]
 pub(crate) fn xpm_file_to_image(
     mlx: PyRef<'_, Mlx>,

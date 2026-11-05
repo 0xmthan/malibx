@@ -29,6 +29,36 @@ jobs:
       - run: cargo test
       - run: cargo audit
 
+  # Docs: build on every push and PR (strict, so broken links fail CI),
+  # deploy to GitHub Pages from main.
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - run: pip install -r docs/requirements.txt
+      - run: mkdocs build --strict
+      - if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  docs-deploy:
+    needs: docs
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v5
+
   # 2. Read the version from Cargo.toml and check if it's already released.
   version:
     needs: check

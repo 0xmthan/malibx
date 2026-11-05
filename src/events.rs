@@ -161,6 +161,8 @@ fn set_hook(
 
 /// mlx_hook: calls `f` on X11 event `x_event`. `x_mask` is accepted for
 /// compatibility; malibx always listens to every supported event.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/hook/
 #[pyfunction]
 #[pyo3(signature = (win, x_event, x_mask, f, param=None))]
 pub(crate) fn hook(
@@ -176,6 +178,8 @@ pub(crate) fn hook(
 }
 
 /// mlx_key_hook: `f(keysym, param)` on key release.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/key_hook/
 #[pyfunction]
 #[pyo3(signature = (win, f, param=None))]
 pub(crate) fn key_hook(
@@ -188,6 +192,8 @@ pub(crate) fn key_hook(
 }
 
 /// mlx_mouse_hook: `f(button, x, y, param)` on mouse button press.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/mouse_hook/
 #[pyfunction]
 #[pyo3(signature = (win, f, param=None))]
 pub(crate) fn mouse_hook(
@@ -200,6 +206,8 @@ pub(crate) fn mouse_hook(
 }
 
 /// mlx_expose_hook: `f(param)` when the window is first shown.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/expose_hook/
 #[pyfunction]
 #[pyo3(signature = (win, f, param=None))]
 pub(crate) fn expose_hook(

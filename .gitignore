@@ -3,3 +3,5 @@
 __pycache__/
 *.so
 dist/
+site/
+.DS_Store

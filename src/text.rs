@@ -66,6 +66,8 @@ fn parse_font(name: &str) -> Option<i64> {
 /// mlx_set_font: picks the text size for `string_put` in this window.
 /// Only the built-in font exists, so `name` is its size: "8x8" (default),
 /// "16x16", "24x24", ... up to "64x64".
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/set_font/
 #[pyfunction]
 pub(crate) fn set_font(mlx: PyRef<'_, Mlx>, win: PyRef<'_, Window>, name: &str) -> PyResult<()> {
     let scale = parse_font(name).ok_or_else(|| {
@@ -80,6 +82,8 @@ pub(crate) fn set_font(mlx: PyRef<'_, Mlx>, win: PyRef<'_, Window>, name: &str) 
 /// mlx_string_put: draws `string` at (x, y) in `color` (0xRRGGBB).
 /// `y` is the text baseline, like MiniLibX. Each character is 8x8 pixels,
 /// or bigger after `set_font`.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/string_put/
 #[pyfunction]
 pub(crate) fn string_put(
     mlx: PyRef<'_, Mlx>,

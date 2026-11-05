@@ -4,6 +4,8 @@ A tiny window and pixel library for Python, written in Rust, with a
 [MiniLibX](https://github.com/42Paris/minilibx-linux)-style API.
 It runs natively on macOS, Linux and Windows.
 
+**Documentation: <https://0xmthan.github.io/malibx/>**
+
 ## Install
 
 ```sh
@@ -91,6 +93,7 @@ Needs Rust and [uv](https://docs.astral.sh/uv/).
 | `make` | Create `.venv` and build and install malibx into it |
 | `make run` | Run `examples/hello.py` (`EXAMPLE=draw`, `keys` or `sprites` for the others) |
 | `make wheel` | Build a release wheel into `dist/` |
+| `make docs` / `docs-serve` | Build the docs into `site/` / preview them at http://127.0.0.1:8000 |
 | `make test` | Run the Rust unit tests |
 | `make lint` | `cargo fmt --check`, `clippy`, tests and `cargo audit` |
 | `make clean` / `fclean` | Remove build files / also remove `.venv` |
