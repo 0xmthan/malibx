@@ -5,12 +5,17 @@ use std::cell::RefCell;
 use pyo3::exceptions::PyRuntimeError;
 use pyo3::prelude::*;
 
+use crate::events::Pending;
 use crate::window::{WinState, Window};
 
 pub(crate) struct Inner {
     pub(crate) windows: Vec<Option<WinState>>,
     loop_hook: Option<(Py<PyAny>, Py<PyAny>)>,
     end_loop: bool,
+    /// KeyPress repeats while a key is held (`do_key_autorepeaton/off`).
+    autorepeat: bool,
+    /// Events collected by `do_sync`, fired at the loop's next event step.
+    synced: Vec<Pending>,
 }
 
 impl Inner {
@@ -39,6 +44,8 @@ pub(crate) fn init() -> Mlx {
             windows: Vec::new(),
             loop_hook: None,
             end_loop: false,
+            autorepeat: true,
+            synced: Vec::new(),
         }),
     }
 }
@@ -90,21 +97,12 @@ pub(crate) fn run_loop(mlx: PyRef<'_, Mlx>, py: Python<'_>) -> PyResult<()> {
         // Present each window and collect its events; drop the ones the user
         // closed. Hooks are called after the borrow ends, so they can call
         // malibx too.
-        let mut pending = Vec::new();
-        {
+        let pending = {
             let mut inner = mlx.inner.borrow_mut();
-            for slot in inner.windows.iter_mut() {
-                if let Some(w) = slot {
-                    if !w.window.is_open() {
-                        w.poll_closed(py, &mut pending);
-                        *slot = None;
-                        continue;
-                    }
-                    w.present()?;
-                    w.poll(py, &mut pending);
-                }
-            }
-        }
+            let mut pending = std::mem::take(&mut inner.synced);
+            present_all(&mut inner, py, &mut pending)?;
+            pending
+        };
         for call in pending {
             call.fire(py)?;
         }
@@ -114,4 +112,84 @@ pub(crate) fn run_loop(mlx: PyRef<'_, Mlx>, py: Python<'_>) -> PyResult<()> {
             return Ok(());
         }
     }
+}
+
+/// Shows every open window and queues its events; drops windows the user
+/// closed (queueing their DestroyNotify).
+fn present_all(inner: &mut Inner, py: Python<'_>, out: &mut Vec<Pending>) -> PyResult<()> {
+    let autorepeat = inner.autorepeat;
+    for slot in inner.windows.iter_mut() {
+        if let Some(w) = slot {
+            if !w.window.is_open() {
+                w.poll_closed(py, out);
+                *slot = None;
+                continue;
+            }
+            w.present()?;
+            w.poll(py, out, autorepeat);
+        }
+    }
+    Ok(())
+}
+
+/// mlx_do_sync: shows everything drawn so far right away, without waiting
+/// for the loop. Input that arrives meanwhile is kept for the loop's hooks.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/do_sync/
+#[pyfunction]
+pub(crate) fn do_sync(mlx: PyRef<'_, Mlx>, py: Python<'_>) -> PyResult<()> {
+    let mut inner = mlx.inner.borrow_mut();
+    let mut synced = std::mem::take(&mut inner.synced);
+    let result = present_all(&mut inner, py, &mut synced);
+    inner.synced = synced;
+    result
+}
+
+/// mlx_do_key_autorepeatoff: KeyPress (event 2) fires once per key press,
+/// not again while the key is held. Only affects malibx windows.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/do_key_autorepeatoff/
+#[pyfunction]
+pub(crate) fn do_key_autorepeatoff(mlx: PyRef<'_, Mlx>) {
+    mlx.inner.borrow_mut().autorepeat = false;
+}
+
+/// mlx_do_key_autorepeaton: KeyPress (event 2) repeats while a key is held
+/// (the default).
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/do_key_autorepeaton/
+#[pyfunction]
+pub(crate) fn do_key_autorepeaton(mlx: PyRef<'_, Mlx>) {
+    mlx.inner.borrow_mut().autorepeat = true;
+}
+
+/// mlx_destroy_display: closes every window and forgets the loop hook.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/destroy_display/
+#[pyfunction]
+pub(crate) fn destroy_display(mlx: PyRef<'_, Mlx>) {
+    let mut inner = mlx.inner.borrow_mut();
+    inner.windows.iter_mut().for_each(|slot| *slot = None);
+    inner.loop_hook = None;
+    inner.synced.clear();
+}
+
+/// mlx_get_screen_size: the main screen's (width, height).
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/get_screen_size/
+#[pyfunction]
+pub(crate) fn get_screen_size(mlx: PyRef<'_, Mlx>) -> PyResult<(usize, usize)> {
+    let _ = mlx; // kept for the MiniLibX signature
+    crate::platform::screen_size()
+        .ok_or_else(|| PyRuntimeError::new_err("get_screen_size failed: no display"))
+}
+
+/// mlx_get_color_value: the color as the window expects it. malibx windows
+/// always use 0xRRGGBB, so this just drops the top byte.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/get_color_value/
+#[pyfunction]
+pub(crate) fn get_color_value(mlx: PyRef<'_, Mlx>, color: i64) -> i64 {
+    let _ = mlx; // kept for the MiniLibX signature
+    color & 0x00FF_FFFF
 }

@@ -20,7 +20,9 @@ second, and returns when there's nothing left to do.
 `None`. `loop` returns when:
 
 - [`loop_end`](loop_end.md) was called; the current frame finishes first, or
-- every window of this `mlx` has been closed.
+- every window of this `mlx` has been closed, by the user or with
+  [`destroy_window`](destroy_window.md) or
+  [`destroy_display`](destroy_display.md).
 
 ## Raises
 

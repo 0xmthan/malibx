@@ -269,15 +269,18 @@ checksum = "5d15f86d12da44cd8d4ec3c73984537eb7f4cadcb9776a575a0a8a05ca11005c"
 
 [[package]]
 name = "malibx"
-version = "0.4.27"
+version = "0.5.44"
 dependencies = [
  "font8x8",
  "minifb",
  "objc2",
  "objc2-app-kit",
+ "objc2-core-graphics",
  "objc2-foundation",
  "pyo3",
  "raw-window-handle",
+ "winapi",
+ "x11-dl",
 ]
 
 [[package]]
@@ -344,6 +347,17 @@ dependencies = [
  "bitflags 2.13.2",
  "dispatch2",
  "objc2",
+]
+
+[[package]]
+name = "objc2-core-graphics"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e022c9d066895efa1345f8e33e584b9f958da2fd4cd116792e15e07e4720a807"
+dependencies = [
+ "bitflags 2.13.2",
+ "libc",
+ "objc2-core-foundation",
 ]
 
 [[package]]

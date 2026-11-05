@@ -85,7 +85,7 @@ you close it.
 
 ## Why malibx?
 
-- **Small.** About twenty functions. You can learn the whole API in an afternoon.
+- **Small.** The 30 functions of MiniLibX, no more. You can learn the whole API in an afternoon.
 - **Direct.** You get a window and a buffer of pixels. There's no scene graph,
   sprite engine or framework to learn first.
 - **Familiar.** It follows MiniLibX, the graphics library used by 42 schools,

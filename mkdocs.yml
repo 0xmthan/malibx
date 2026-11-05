@@ -21,12 +21,17 @@ nav:
           - loop: reference/loop.md
           - loop_hook: reference/loop_hook.md
           - loop_end: reference/loop_end.md
+          - do_sync: reference/do_sync.md
+          - destroy_display: reference/destroy_display.md
+          - get_screen_size: reference/get_screen_size.md
       - Windows and drawing:
           - new_window: reference/new_window.md
+          - destroy_window: reference/destroy_window.md
           - clear_window: reference/clear_window.md
           - pixel_put: reference/pixel_put.md
           - string_put: reference/string_put.md
           - set_font: reference/set_font.md
+          - get_color_value: reference/get_color_value.md
       - Images:
           - new_image: reference/new_image.md
           - get_data_addr: reference/get_data_addr.md
@@ -39,6 +44,13 @@ nav:
           - key_hook: reference/key_hook.md
           - mouse_hook: reference/mouse_hook.md
           - expose_hook: reference/expose_hook.md
+          - do_key_autorepeatoff: reference/do_key_autorepeatoff.md
+          - do_key_autorepeaton: reference/do_key_autorepeaton.md
+      - Mouse:
+          - mouse_get_pos: reference/mouse_get_pos.md
+          - mouse_move: reference/mouse_move.md
+          - mouse_hide: reference/mouse_hide.md
+          - mouse_show: reference/mouse_show.md
 
 theme:
   name: material

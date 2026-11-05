@@ -1,7 +1,9 @@
 # API reference
 
-Every function in malibx, one page each. The names are MiniLibX's without the
-`mlx_` prefix, and the arguments are in the same order.
+Every function in malibx, one page each. malibx has the complete MiniLibX
+API: all 30 functions, with the `mlx_` prefix dropped and the arguments in the
+same order. Where MiniLibX returns values through pointers (`int *x`), malibx
+returns them as a tuple.
 
 ## Setup and loop
 
@@ -11,16 +13,21 @@ Every function in malibx, one page each. The names are MiniLibX's without the
 | [`loop(mlx)`](loop.md) | Runs the main loop until the windows close or `loop_end` is called |
 | [`loop_hook(mlx, f, param=None)`](loop_hook.md) | Calls `f(param)` once per frame |
 | [`loop_end(mlx)`](loop_end.md) | Makes `loop` return |
+| [`do_sync(mlx)`](do_sync.md) | Shows what's drawn right away, without waiting for the loop |
+| [`destroy_display(mlx)`](destroy_display.md) | Closes every window and removes the loop hook |
+| [`get_screen_size(mlx)`](get_screen_size.md) | Returns the main screen's `(width, height)` |
 
 ## Windows and drawing
 
 | Function | Does |
 |---|---|
 | [`new_window(mlx, size_x, size_y, title)`](new_window.md) | Opens a window |
+| [`destroy_window(mlx, win)`](destroy_window.md) | Closes a window |
 | [`clear_window(mlx, win)`](clear_window.md) | Fills a window with black |
 | [`pixel_put(mlx, win, x, y, color)`](pixel_put.md) | Sets one pixel |
 | [`string_put(mlx, win, x, y, color, string)`](string_put.md) | Draws text; `y` is the baseline |
 | [`set_font(mlx, win, name)`](set_font.md) | Sets the text size: `"8x8"` to `"64x64"` |
+| [`get_color_value(mlx, color)`](get_color_value.md) | Converts a color for the display (always `0xRRGGBB` in malibx) |
 
 ## Images
 
@@ -41,6 +48,17 @@ Every function in malibx, one page each. The names are MiniLibX's without the
 | [`key_hook(win, f, param=None)`](key_hook.md) | `f(keysym, param)` on key **release** |
 | [`mouse_hook(win, f, param=None)`](mouse_hook.md) | `f(button, x, y, param)` on button press |
 | [`expose_hook(win, f, param=None)`](expose_hook.md) | `f(param)` when the window is first shown |
+| [`do_key_autorepeatoff(mlx)`](do_key_autorepeatoff.md) | KeyPress fires once per press |
+| [`do_key_autorepeaton(mlx)`](do_key_autorepeaton.md) | KeyPress repeats while a key is held (the default) |
+
+## Mouse
+
+| Function | Does |
+|---|---|
+| [`mouse_get_pos(mlx, win)`](mouse_get_pos.md) | Returns the pointer's `(x, y)` relative to the window |
+| [`mouse_move(mlx, win, x, y)`](mouse_move.md) | Moves the pointer |
+| [`mouse_hide(mlx, win)`](mouse_hide.md) | Hides the pointer over the window |
+| [`mouse_show(mlx, win)`](mouse_show.md) | Shows it again |
 
 ## Types
 
@@ -56,7 +74,8 @@ The connection, returned by [`init`](init.md). It's MiniLibX's
 
 A window, returned by [`new_window`](new_window.md). It's MiniLibX's
 `void *win_ptr`. A window remembers its `Mlx`, so the hook functions only need
-the window. Once the user closes it, functions that use it raise
+the window. Once it's closed, by the user or by
+[`destroy_window`](destroy_window.md), functions that use it raise
 `RuntimeError: window is closed`.
 
 ### Image
@@ -65,18 +84,3 @@ An off-screen image, returned by [`new_image`](new_image.md),
 [`xpm_file_to_image`](xpm_file_to_image.md) and
 [`xpm_to_image`](xpm_to_image.md). It's MiniLibX's `void *img_ptr`.
 Its pixels are reached through [`get_data_addr`](get_data_addr.md).
-
-## Not in malibx
-
-These MiniLibX functions aren't implemented:
-
-| MiniLibX | Instead |
-|---|---|
-| `mlx_destroy_window` | The user closes windows. To stop from code, call [`loop_end`](loop_end.md). |
-| `mlx_destroy_display` | Not needed; Python cleans up on exit. |
-| `mlx_get_screen_size` | — |
-| `mlx_get_color_value` | Not needed; colors are always `0xRRGGBB`. |
-| `mlx_do_sync` | Not needed; windows are shown every frame. |
-| `mlx_do_key_autorepeatoff` / `on` | Track held keys in a `set` (see [Smooth movement](../getting-started/input.md#smooth-movement)). |
-| `mlx_mouse_get_pos` | Store the position from a MotionNotify [`hook`](hook.md) (event 6). |
-| `mlx_mouse_move`, `mlx_mouse_hide`, `mlx_mouse_show` | — |

@@ -115,6 +115,53 @@ def loop_end(mlx: Mlx) -> None:
     Docs: https://0xmthan.github.io/malibx/reference/loop_end/
     """
 
+def do_sync(mlx: Mlx) -> None:
+    """Show everything drawn so far right away. Like `mlx_do_sync`.
+
+    Shows every open window now instead of at the next frame of `loop()`,
+    e.g. a loading screen before `loop()` starts. Input that arrives
+    meanwhile is kept for the loop's hooks; no hooks run inside `do_sync`.
+
+    Args:
+        mlx: The connection from `init()`.
+
+    Docs: https://0xmthan.github.io/malibx/reference/do_sync/
+    """
+
+def destroy_display(mlx: Mlx) -> None:
+    """Close every window and remove the loop hook. Like `mlx_destroy_display`.
+
+    No DestroyNotify hooks are called. A running `loop()` returns at the end
+    of the frame. Unlike MiniLibX, `mlx` stays usable for new windows.
+
+    Args:
+        mlx: The connection to shut down.
+
+    Docs: https://0xmthan.github.io/malibx/reference/destroy_display/
+    """
+
+def get_screen_size(mlx: Mlx) -> tuple[int, int]:
+    """Return the main screen's `(width, height)`. Like `mlx_get_screen_size`.
+
+    Pixels on Linux and Windows, points on macOS (the unit window sizes use).
+    Doesn't subtract the menu bar, Dock or taskbar.
+
+    Args:
+        mlx: The connection from `init()`.
+
+    Returns:
+        `(width, height)`.
+
+    Raises:
+        RuntimeError: No display is available.
+
+    Example:
+        sw, sh = malibx.get_screen_size(mlx)
+        win = malibx.new_window(mlx, min(1280, sw), min(800, sh), "fits")
+
+    Docs: https://0xmthan.github.io/malibx/reference/get_screen_size/
+    """
+
 # Windows and drawing
 
 def new_window(mlx: Mlx, size_x: int, size_y: int, title: str) -> Window:
@@ -136,6 +183,21 @@ def new_window(mlx: Mlx, size_x: int, size_y: int, title: str) -> Window:
         RuntimeError: The window couldn't be created (e.g. no display).
 
     Docs: https://0xmthan.github.io/malibx/reference/new_window/
+    """
+
+def destroy_window(mlx: Mlx, win: Window) -> None:
+    """Close a window from code. Like `mlx_destroy_window`.
+
+    Its DestroyNotify hook (event 17) is NOT called, so it's safe to call
+    from that hook. Afterwards the window raises `RuntimeError` when used.
+    Destroying a closed window does nothing. If it was the last window,
+    `loop()` returns at the end of the frame.
+
+    Args:
+        mlx: The connection from `init()`.
+        win: The window to close.
+
+    Docs: https://0xmthan.github.io/malibx/reference/destroy_window/
     """
 
 def clear_window(mlx: Mlx, win: Window) -> None:
@@ -210,6 +272,22 @@ def set_font(mlx: Mlx, win: Window, name: str) -> None:
         RuntimeError: The window was closed.
 
     Docs: https://0xmthan.github.io/malibx/reference/set_font/
+    """
+
+def get_color_value(mlx: Mlx, color: int) -> int:
+    """Convert a color for the display. Like `mlx_get_color_value`.
+
+    malibx always uses 0xRRGGBB, so this returns `color & 0xFFFFFF`. Kept so
+    MiniLibX code works; new code doesn't need it.
+
+    Args:
+        mlx: The connection from `init()`.
+        color: A 0xRRGGBB color.
+
+    Returns:
+        The color as 0xRRGGBB.
+
+    Docs: https://0xmthan.github.io/malibx/reference/get_color_value/
     """
 
 # Images
@@ -422,4 +500,95 @@ def expose_hook(win: Window, f: Callable[[_T], Any], param: _T = ...) -> None:
         RuntimeError: The window was closed.
 
     Docs: https://0xmthan.github.io/malibx/reference/expose_hook/
+    """
+
+def do_key_autorepeatoff(mlx: Mlx) -> None:
+    """Make KeyPress (event 2) fire once per press, not while held. Like `mlx_do_key_autorepeatoff`.
+
+    Applies to every window of `mlx`. Unlike MiniLibX it only affects malibx,
+    not the whole system. KeyRelease and `key_hook()` are unaffected.
+
+    Args:
+        mlx: The connection from `init()`.
+
+    Docs: https://0xmthan.github.io/malibx/reference/do_key_autorepeatoff/
+    """
+
+def do_key_autorepeaton(mlx: Mlx) -> None:
+    """Make KeyPress (event 2) repeat while a key is held (the default). Like `mlx_do_key_autorepeaton`.
+
+    Args:
+        mlx: The connection from `init()`.
+
+    Docs: https://0xmthan.github.io/malibx/reference/do_key_autorepeaton/
+    """
+
+# Mouse
+
+def mouse_get_pos(mlx: Mlx, win: Window) -> tuple[int, int]:
+    """Return the pointer's `(x, y)` relative to the window. Like `mlx_mouse_get_pos`.
+
+    (0, 0) is the window's top-left. Outside the window the values can be
+    negative or past the edges. Updated every frame. On Wayland it only
+    updates while the pointer is over the window.
+
+    Args:
+        mlx: The connection from `init()`.
+        win: The window to measure from.
+
+    Returns:
+        `(x, y)` in window pixels.
+
+    Raises:
+        RuntimeError: The window was closed.
+
+    Docs: https://0xmthan.github.io/malibx/reference/mouse_get_pos/
+    """
+
+def mouse_move(mlx: Mlx, win: Window, x: int, y: int) -> None:
+    """Move the pointer to (x, y) in the window. Like `mlx_mouse_move`.
+
+    Moves the real system pointer. Does nothing on Wayland, which doesn't
+    allow it. Handy for mouse-look: read `mouse_get_pos()`, then move the
+    pointer back to the center each frame.
+
+    Args:
+        mlx: The connection from `init()`.
+        win: The window the coordinates are relative to.
+        x: Column, from the window's left edge.
+        y: Row, from the window's top edge.
+
+    Raises:
+        RuntimeError: The window was closed.
+
+    Docs: https://0xmthan.github.io/malibx/reference/mouse_move/
+    """
+
+def mouse_hide(mlx: Mlx, win: Window) -> None:
+    """Hide the pointer while it's over the window. Like `mlx_mouse_hide`.
+
+    The pointer still moves and still sends events. Hiding twice is the same
+    as hiding once.
+
+    Args:
+        mlx: The connection from `init()`.
+        win: The window to hide the pointer in.
+
+    Raises:
+        RuntimeError: The window was closed.
+
+    Docs: https://0xmthan.github.io/malibx/reference/mouse_hide/
+    """
+
+def mouse_show(mlx: Mlx, win: Window) -> None:
+    """Show the pointer again after `mouse_hide()`. Like `mlx_mouse_show`.
+
+    Args:
+        mlx: The connection from `init()`.
+        win: The window to show the pointer in.
+
+    Raises:
+        RuntimeError: The window was closed.
+
+    Docs: https://0xmthan.github.io/malibx/reference/mouse_show/
     """

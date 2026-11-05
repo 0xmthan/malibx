@@ -4,6 +4,8 @@ mod events;
 mod icon;
 mod image;
 mod mlx;
+mod mouse;
+mod platform;
 mod text;
 mod window;
 mod xpm;
@@ -21,8 +23,15 @@ fn malibx(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(mlx::loop_hook, m)?)?;
     m.add_function(wrap_pyfunction!(mlx::loop_end, m)?)?;
     m.add_function(wrap_pyfunction!(mlx::run_loop, m)?)?;
+    m.add_function(wrap_pyfunction!(mlx::do_sync, m)?)?;
+    m.add_function(wrap_pyfunction!(mlx::do_key_autorepeatoff, m)?)?;
+    m.add_function(wrap_pyfunction!(mlx::do_key_autorepeaton, m)?)?;
+    m.add_function(wrap_pyfunction!(mlx::destroy_display, m)?)?;
+    m.add_function(wrap_pyfunction!(mlx::get_screen_size, m)?)?;
+    m.add_function(wrap_pyfunction!(mlx::get_color_value, m)?)?;
 
     m.add_function(wrap_pyfunction!(window::new_window, m)?)?;
+    m.add_function(wrap_pyfunction!(window::destroy_window, m)?)?;
     m.add_function(wrap_pyfunction!(window::clear_window, m)?)?;
     m.add_function(wrap_pyfunction!(window::pixel_put, m)?)?;
     m.add_function(wrap_pyfunction!(text::string_put, m)?)?;
@@ -32,6 +41,11 @@ fn malibx(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(events::key_hook, m)?)?;
     m.add_function(wrap_pyfunction!(events::mouse_hook, m)?)?;
     m.add_function(wrap_pyfunction!(events::expose_hook, m)?)?;
+
+    m.add_function(wrap_pyfunction!(mouse::mouse_get_pos, m)?)?;
+    m.add_function(wrap_pyfunction!(mouse::mouse_move, m)?)?;
+    m.add_function(wrap_pyfunction!(mouse::mouse_hide, m)?)?;
+    m.add_function(wrap_pyfunction!(mouse::mouse_show, m)?)?;
 
     m.add_function(wrap_pyfunction!(image::new_image, m)?)?;
     m.add_function(wrap_pyfunction!(image::get_data_addr, m)?)?;

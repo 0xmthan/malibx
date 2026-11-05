@@ -84,7 +84,7 @@ impl WinState {
     }
 
     /// Queues the events since the last frame. Call right after `present`.
-    pub(crate) fn poll(&mut self, py: Python<'_>, out: &mut Vec<Pending>) {
+    pub(crate) fn poll(&mut self, py: Python<'_>, out: &mut Vec<Pending>, autorepeat: bool) {
         let (hooks, win, input) = (&self.hooks, &self.window, &mut self.input);
 
         if !input.exposed {
@@ -92,7 +92,11 @@ impl WinState {
             queue(hooks, py, out, EXPOSE, Args::Plain);
         }
 
-        for key in win.get_keys_pressed(KeyRepeat::Yes) {
+        for key in win.get_keys_pressed(if autorepeat {
+            KeyRepeat::Yes
+        } else {
+            KeyRepeat::No
+        }) {
             if let Some(k) = keysym(key) {
                 queue(hooks, py, out, KEY_PRESS, Args::Key(k));
             }

@@ -39,9 +39,10 @@ functions.
   window icon on Linux X11. Wayland and Windows keep the system default.
 - You can open as many windows as you like. Each has its own pixels, font size
   and hooks.
-- There's no `destroy_window`. A window closes when the user clicks its close
-  button. To close everything from code, call [`loop_end`](loop_end.md) and
-  let the program exit.
+- A window closes when the user clicks its close button, or when you call
+  [`destroy_window`](destroy_window.md).
+- To fit a window on the screen, check
+  [`get_screen_size`](get_screen_size.md) first.
 
 ## Example
 
@@ -55,5 +56,5 @@ malibx.loop(mlx)
 
 ## See also
 
-[`init`](init.md) · [`clear_window`](clear_window.md) ·
+[`init`](init.md) · [`destroy_window`](destroy_window.md) · [`clear_window`](clear_window.md) ·
 [Your first window](../getting-started/first-window.md)

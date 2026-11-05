@@ -24,7 +24,7 @@ and [`expose_hook`](expose_hook.md).
 
 | `x_event` | Name | Usual `x_mask` | `f` is called as | Fires when |
 |---|---|---|---|---|
-| `2` | KeyPress | `1 << 0` | `f(keysym, param)` | a key goes down, then again on auto-repeat while it's held |
+| `2` | KeyPress | `1 << 0` | `f(keysym, param)` | a key goes down, then again on auto-repeat while it's held (see [`do_key_autorepeatoff`](do_key_autorepeatoff.md)) |
 | `3` | KeyRelease | `1 << 1` | `f(keysym, param)` | a key goes up |
 | `4` | ButtonPress | `1 << 2` | `f(button, x, y, param)` | a mouse button goes down, or the wheel scrolls |
 | `5` | ButtonRelease | `1 << 3` | `f(button, x, y, param)` | a mouse button goes up, or the wheel scrolls |
@@ -64,7 +64,8 @@ and [`expose_hook`](expose_hook.md).
   [The main loop](../getting-started/the-loop.md#frames).
 - **Close button (17):** the window is already closed when `f` runs, so
   don't draw to it. If it was the last window, [`loop`](loop.md) returns
-  after `f`.
+  after `f`. Closing a window from code with
+  [`destroy_window`](destroy_window.md) doesn't call this hook.
 - An exception in `f` stops the loop and propagates out of `loop`.
 
 ## Example

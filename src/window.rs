@@ -19,6 +19,8 @@ pub(crate) struct WinState {
     pub(crate) input: InputState,
     /// Text scale set by `set_font`: each glyph is 8 * font_scale pixels.
     pub(crate) font_scale: i64,
+    /// Set by `mouse_hide`, cleared by `mouse_show`.
+    pub(crate) cursor_hidden: bool,
 }
 
 impl WinState {
@@ -62,6 +64,7 @@ pub(crate) fn new_window(
         hooks: HashMap::new(),
         input: InputState::default(),
         font_scale: 1,
+        cursor_hidden: false,
     }));
     Ok(Window {
         id: inner.windows.len() - 1,
@@ -95,4 +98,15 @@ pub(crate) fn pixel_put(
         w.buffer[y as usize * w.width + x as usize] = color as u32 & 0x00FF_FFFF;
     }
     Ok(())
+}
+
+/// mlx_destroy_window: closes the window now. Its DestroyNotify hook isn't
+/// called. Destroying a window that's already closed does nothing.
+///
+/// Docs: https://0xmthan.github.io/malibx/reference/destroy_window/
+#[pyfunction]
+pub(crate) fn destroy_window(mlx: PyRef<'_, Mlx>, win: PyRef<'_, Window>) {
+    if let Some(slot) = mlx.inner.borrow_mut().windows.get_mut(win.id) {
+        *slot = None;
+    }
 }

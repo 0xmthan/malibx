@@ -29,12 +29,14 @@ malibx.loop(mlx)
 
 ## Functions
 
-Same names as MiniLibX.
+All 30 MiniLibX functions, with the same names minus the `mlx_` prefix.
+Values MiniLibX returns through pointers come back as a tuple.
 
 | malibx | MiniLibX | Does |
 |---|---|---|
 | `init()` | `mlx_init` | Returns the connection handle |
 | `new_window(mlx, w, h, title)` | `mlx_new_window` | Opens a window, returns a window handle |
+| `destroy_window(mlx, win)` | `mlx_destroy_window` | Closes a window (its close hook isn't called) |
 | `clear_window(mlx, win)` | `mlx_clear_window` | Fills the window with black |
 | `pixel_put(mlx, win, x, y, color)` | `mlx_pixel_put` | Draws one pixel (`0xRRGGBB`) |
 | `new_image(mlx, w, h)` | `mlx_new_image` | Creates a black image |
@@ -45,6 +47,7 @@ Same names as MiniLibX.
 | `xpm_to_image(mlx, xpm_data)` | `mlx_xpm_to_image` | Same, from a list of the XPM's strings |
 | `string_put(mlx, win, x, y, color, string)` | `mlx_string_put` | Draws text; `y` is the baseline |
 | `set_font(mlx, win, name)` | `mlx_set_font` | Text size for the window: `"8x8"` (default), `"16x16"`, … `"64x64"` |
+| `get_color_value(mlx, color)` | `mlx_get_color_value` | Returns `color & 0xFFFFFF` (malibx is always `0xRRGGBB`) |
 | `hook(win, x_event, x_mask, f, param=None)` | `mlx_hook` | Calls `f` on an X11 event (see below) |
 | `key_hook(win, f, param=None)` | `mlx_key_hook` | `f(keysym, param)` on key **release** |
 | `mouse_hook(win, f, param=None)` | `mlx_mouse_hook` | `f(button, x, y, param)` on button press |
@@ -52,6 +55,13 @@ Same names as MiniLibX.
 | `loop_hook(mlx, f, param=None)` | `mlx_loop_hook` | Calls `f(param)` once per frame |
 | `loop(mlx)` | `mlx_loop` | Runs until `loop_end` is called or all windows are closed |
 | `loop_end(mlx)` | `mlx_loop_end` | Makes `loop` return |
+| `do_sync(mlx)` | `mlx_do_sync` | Shows what's drawn right away |
+| `do_key_autorepeatoff(mlx)` / `do_key_autorepeaton(mlx)` | `mlx_do_key_autorepeatoff` / `on` | KeyPress once per press / repeating while held (default); only affects malibx |
+| `destroy_display(mlx)` | `mlx_destroy_display` | Closes every window and removes the loop hook |
+| `get_screen_size(mlx)` | `mlx_get_screen_size` | Returns `(width, height)` of the main screen |
+| `mouse_get_pos(mlx, win)` | `mlx_mouse_get_pos` | Returns the pointer's `(x, y)` relative to the window |
+| `mouse_move(mlx, win, x, y)` | `mlx_mouse_move` | Moves the pointer (not on Wayland) |
+| `mouse_hide(mlx, win)` / `mouse_show(mlx, win)` | `mlx_mouse_hide` / `mlx_mouse_show` | Hides / shows the pointer over the window |
 
 Events for `hook`:
 

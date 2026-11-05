@@ -150,7 +150,9 @@ raise `ValueError`.
 ### The close button
 
 When the user clicks the window's close button, malibx **closes the window
-right away**, then calls your event 17 hook (if any). Use the hook for
+right away**, then calls your event 17 hook (if any). To close a window from
+code, use [`destroy_window`](../reference/destroy_window.md); that doesn't
+call the hook. Use the hook for
 cleanup or for a goodbye message. You can't cancel the close, and the window
 is already gone, so don't draw to it from this hook.
 
@@ -215,7 +217,8 @@ malibx.loop(mlx)
 ```
 
 1. A `set` ignores auto-repeat: adding a key that's already held changes
-   nothing.
+   nothing. For the opposite (one action per press, however long it's
+   held) call [`do_key_autorepeatoff`](../reference/do_key_autorepeatoff.md).
 2. Every held key moves the player once per frame. Holding two arrows moves
    diagonally.
 
@@ -232,7 +235,17 @@ malibx.hook(win, 6, 1 << 6, on_move, state)
 ```
 
 Store the position in your state and use it in the loop hook, the same way
-as held keys.
+as held keys. Or skip the hook and ask for it whenever you need it:
+
+```python
+def frame(st):
+    mx, my = malibx.mouse_get_pos(mlx, win)
+```
+
+You can also move the pointer with
+[`mouse_move`](../reference/mouse_move.md), and hide it with
+[`mouse_hide`](../reference/mouse_hide.md), for example to draw your own
+cursor or for first-person mouse-look.
 
 ## Summary
 

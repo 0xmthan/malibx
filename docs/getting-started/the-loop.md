@@ -145,6 +145,7 @@ the parameter whatever you like.
 |---|---|
 | `malibx.loop_end(mlx)` | `loop` returns at the end of the current frame. Event hooks already queued for that frame still run. |
 | The user closes the last window | That window's [close hook (event 17)](input.md#the-close-button) runs, then `loop` returns. |
+| [`destroy_window`](../reference/destroy_window.md) on the last window, or [`destroy_display`](../reference/destroy_display.md) | `loop` returns at the end of the current frame. No close hook runs. |
 | ++ctrl+c++ in the terminal | `KeyboardInterrupt` is raised from `loop`. |
 | A hook raises an exception | The exception propagates out of `loop`, with a normal Python traceback. |
 
