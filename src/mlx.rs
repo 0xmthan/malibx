@@ -79,17 +79,29 @@ pub(crate) fn run_loop(mlx: PyRef<'_, Mlx>, py: Python<'_>) -> PyResult<()> {
         }
         py.check_signals()?;
 
-        // Present each window and pump its events; drop the ones the user closed.
-        let mut inner = mlx.inner.borrow_mut();
-        for slot in inner.windows.iter_mut() {
-            if let Some(w) = slot {
-                if !w.window.is_open() {
-                    *slot = None;
-                    continue;
+        // Present each window and collect its events; drop the ones the user
+        // closed. Hooks are called after the borrow ends, so they can call
+        // malibx too.
+        let mut pending = Vec::new();
+        {
+            let mut inner = mlx.inner.borrow_mut();
+            for slot in inner.windows.iter_mut() {
+                if let Some(w) = slot {
+                    if !w.window.is_open() {
+                        w.poll_closed(py, &mut pending);
+                        *slot = None;
+                        continue;
+                    }
+                    w.present()?;
+                    w.poll(py, &mut pending);
                 }
-                w.present()?;
             }
         }
+        for call in pending {
+            call.fire(py)?;
+        }
+
+        let inner = mlx.inner.borrow();
         if inner.end_loop || inner.windows.iter().all(Option::is_none) {
             return Ok(());
         }

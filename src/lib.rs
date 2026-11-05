@@ -1,5 +1,6 @@
 //! malibx: a tiny window/pixel library with a MiniLibX-style API, usable from Python.
 
+mod events;
 mod image;
 mod mlx;
 mod window;
@@ -20,6 +21,11 @@ fn malibx(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(window::new_window, m)?)?;
     m.add_function(wrap_pyfunction!(window::clear_window, m)?)?;
     m.add_function(wrap_pyfunction!(window::pixel_put, m)?)?;
+
+    m.add_function(wrap_pyfunction!(events::hook, m)?)?;
+    m.add_function(wrap_pyfunction!(events::key_hook, m)?)?;
+    m.add_function(wrap_pyfunction!(events::mouse_hook, m)?)?;
+    m.add_function(wrap_pyfunction!(events::expose_hook, m)?)?;
 
     m.add_function(wrap_pyfunction!(image::new_image, m)?)?;
     m.add_function(wrap_pyfunction!(image::get_data_addr, m)?)?;

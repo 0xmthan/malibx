@@ -39,11 +39,31 @@ Same names as MiniLibX.
 | `get_data_addr(img)` | `mlx_get_data_addr` | Returns `(buffer, bits_per_pixel, size_line, endian)` |
 | `put_image_to_window(mlx, win, img, x, y)` | `mlx_put_image_to_window` | Draws the image at (x, y) |
 | `destroy_image(mlx, img)` | `mlx_destroy_image` | Frees the image |
+| `hook(win, x_event, x_mask, f, param=None)` | `mlx_hook` | Calls `f` on an X11 event (see below) |
+| `key_hook(win, f, param=None)` | `mlx_key_hook` | `f(keysym, param)` on key **release** |
+| `mouse_hook(win, f, param=None)` | `mlx_mouse_hook` | `f(button, x, y, param)` on button press |
+| `expose_hook(win, f, param=None)` | `mlx_expose_hook` | `f(param)` when the window is first shown |
 | `loop_hook(mlx, f, param=None)` | `mlx_loop_hook` | Calls `f(param)` once per frame |
 | `loop(mlx)` | `mlx_loop` | Runs until `loop_end` is called or all windows are closed |
 | `loop_end(mlx)` | `mlx_loop_end` | Makes `loop` return |
 
-- The loop runs at 60 fps. What you draw in the loop hook shows up that frame.
+Events for `hook`:
+
+| `x_event` | Event | `f` gets |
+|---|---|---|
+| 2 / 3 | KeyPress / KeyRelease | `(keysym, param)` |
+| 4 / 5 | ButtonPress / ButtonRelease | `(button, x, y, param)` |
+| 6 | MotionNotify | `(x, y, param)` |
+| 12 | Expose | `(param)` |
+| 17 | DestroyNotify (close button) | `(param)` |
+
+- The loop runs at 60 fps. Each frame: your loop hook, then the window is
+  shown, then the event hooks for that frame.
+- Keys are X11 keysyms like in MiniLibX: arrows `0xff51`–`0xff54`, Esc
+  `0xff1b`, Enter `0xff0d`, letters and digits are their lowercase ASCII code.
+- Mouse buttons: 1 left, 2 middle, 3 right, 4/5 scroll up/down.
+- `x_mask` is accepted but ignored; every supported event is always reported.
+- Clicking the close button closes the window right away; hook 17 runs just after.
 - `buffer` is a writable `memoryview`: 32 bits per pixel, little endian, so
   pixel (x, y) is 4 bytes `B, G, R, A` at `y * size_line + x * 4`.
 - Alpha is ignored for now; images are drawn opaque.
@@ -58,7 +78,7 @@ Needs Rust and [uv](https://docs.astral.sh/uv/).
 | Command | Does |
 |---|---|
 | `make` | Create `.venv` and build and install malibx into it |
-| `make run` | Run `examples/hello.py` (`make run EXAMPLE=draw` for `draw.py`) |
+| `make run` | Run `examples/hello.py` (`make run EXAMPLE=draw` or `EXAMPLE=keys`) |
 | `make wheel` | Build a release wheel into `dist/` |
 | `make test` | Run the Rust unit tests |
 | `make lint` | `cargo fmt --check`, `clippy`, tests and `cargo audit` |
