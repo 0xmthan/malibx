@@ -121,6 +121,7 @@ Alpha is inverted: `0x00` = opaque, `0xFF` = transparent (MLX README).
 - `endian`: 0 means little endian, 1 means big endian.
 - The pixel at (x, y) is at `addr + y * size_line + x * (bits_per_pixel / 8)`.
 
-**Transparency:** XPM pixels marked `None` become transparent (`mlx_xpm.c` sets
-them to `0xFF000000`), and `mlx_put_image_to_window` skips them with a clip
-mask. Images created with `mlx_new_image` have no transparency.
+**Transparency:** XPM pixels marked `None` are stored as `0xFF000000`
+(`mlx_xpm.c`), i.e. alpha `0xFF`, which the README defines as fully transparent.
+The old clip-mask code in `mlx_xpm.c` is commented out, so transparency relies
+on that alpha value.

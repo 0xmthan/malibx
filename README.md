@@ -39,6 +39,9 @@ Same names as MiniLibX.
 | `get_data_addr(img)` | `mlx_get_data_addr` | Returns `(buffer, bits_per_pixel, size_line, endian)` |
 | `put_image_to_window(mlx, win, img, x, y)` | `mlx_put_image_to_window` | Draws the image at (x, y) |
 | `destroy_image(mlx, img)` | `mlx_destroy_image` | Frees the image |
+| `xpm_file_to_image(mlx, path)` | `mlx_xpm_file_to_image` | Loads an `.xpm` file, returns `(img, width, height)` |
+| `xpm_to_image(mlx, xpm_data)` | `mlx_xpm_to_image` | Same, from a list of the XPM's strings |
+| `string_put(mlx, win, x, y, color, string)` | `mlx_string_put` | Draws text; `y` is the baseline |
 | `hook(win, x_event, x_mask, f, param=None)` | `mlx_hook` | Calls `f` on an X11 event (see below) |
 | `key_hook(win, f, param=None)` | `mlx_key_hook` | `f(keysym, param)` on key **release** |
 | `mouse_hook(win, f, param=None)` | `mlx_mouse_hook` | `f(button, x, y, param)` on button press |
@@ -66,7 +69,12 @@ Events for `hook`:
 - Clicking the close button closes the window right away; hook 17 runs just after.
 - `buffer` is a writable `memoryview`: 32 bits per pixel, little endian, so
   pixel (x, y) is 4 bytes `B, G, R, A` at `y * size_line + x * 4`.
-- Alpha is ignored for now; images are drawn opaque.
+- Transparency works like MiniLibX: pixels with alpha `0xFF` are not drawn,
+  anything else is drawn opaque. XPM `None` pixels get alpha `0xFF`.
+- XPM colors: `#RGB`, `#RRGGBB`, `#RRRRGGGGBBBB`, `None` or an X11 color name
+  (`white`, `light blue`, …). Unknown colors become black, like MiniLibX.
+- Text uses a built-in 8x8 font (each character is 8 px wide); there is no
+  `set_font`.
 
 See [mlx-reference.md](mlx-reference.md) for the full MiniLibX API this library
 follows. Type hints are included.
@@ -78,7 +86,7 @@ Needs Rust and [uv](https://docs.astral.sh/uv/).
 | Command | Does |
 |---|---|
 | `make` | Create `.venv` and build and install malibx into it |
-| `make run` | Run `examples/hello.py` (`make run EXAMPLE=draw` or `EXAMPLE=keys`) |
+| `make run` | Run `examples/hello.py` (`EXAMPLE=draw`, `keys` or `sprites` for the others) |
 | `make wheel` | Build a release wheel into `dist/` |
 | `make test` | Run the Rust unit tests |
 | `make lint` | `cargo fmt --check`, `clippy`, tests and `cargo audit` |

@@ -22,6 +22,15 @@ pub(crate) struct Image {
 }
 
 impl Image {
+    /// An image filled with the given BGRA pixels (used by the XPM loader).
+    pub(crate) fn from_bgra(py: Python<'_>, width: usize, height: usize, pixels: &[u8]) -> Image {
+        Image {
+            data: Some(PyByteArray::new(py, pixels).unbind()),
+            width,
+            height,
+        }
+    }
+
     fn data(&self) -> PyResult<&Py<PyByteArray>> {
         self.data
             .as_ref()
@@ -62,7 +71,7 @@ pub(crate) fn get_data_addr<'py>(
 }
 
 /// mlx_put_image_to_window: copies the image into the window at (x, y),
-/// clipped to the window edges.
+/// clipped to the window edges. Pixels with alpha 0xFF are transparent.
 #[pyfunction]
 pub(crate) fn put_image_to_window(
     mlx: PyRef<'_, Mlx>,
@@ -99,6 +108,7 @@ pub(crate) fn destroy_image(mlx: PyRef<'_, Mlx>, mut img: PyRefMut<'_, Image>) {
 }
 
 /// Copies a BGRA image into a 0x00RRGGBB buffer at (x, y), clipped to its edges.
+/// Alpha 0xFF means transparent (MiniLibX's convention); anything else is opaque.
 #[allow(clippy::too_many_arguments)]
 fn blit(dst: &mut [u32], dw: usize, dh: usize, src: &[u8], sw: usize, sh: usize, x: i64, y: i64) {
     let (iw, ih) = (sw as i64, sh as i64);
@@ -115,7 +125,9 @@ fn blit(dst: &mut [u32], dw: usize, dh: usize, src: &[u8], sw: usize, sh: usize,
             .iter_mut()
             .zip(src[s..s + n * BPP].as_chunks::<BPP>().0)
         {
-            *px = u32::from_le_bytes([bgra[0], bgra[1], bgra[2], 0]);
+            if bgra[3] != 0xFF {
+                *px = u32::from_le_bytes([bgra[0], bgra[1], bgra[2], 0]);
+            }
         }
     }
 }
@@ -129,7 +141,7 @@ mod tests {
         let mut v = Vec::new();
         for y in 0..sh {
             for x in 0..sw {
-                v.extend_from_slice(&[(x + 1) as u8, (y + 1) as u8, 0, 0xFF]);
+                v.extend_from_slice(&[(x + 1) as u8, (y + 1) as u8, 0, 0]);
             }
         }
         v
@@ -165,9 +177,12 @@ mod tests {
     }
 
     #[test]
-    fn blit_ignores_alpha_and_keeps_rgb() {
-        let mut dst = vec![0u32; 1];
-        blit(&mut dst, 1, 1, &[0x56, 0x34, 0x12, 0xFF], 1, 1, 0, 0);
-        assert_eq!(dst[0], 0x0012_3456);
+    fn blit_alpha_ff_is_transparent_anything_else_opaque() {
+        let mut dst = vec![7u32; 3];
+        let src = [
+            0x56, 0x34, 0x12, 0x00, 0x56, 0x34, 0x12, 0x80, 0x56, 0x34, 0x12, 0xFF,
+        ];
+        blit(&mut dst, 3, 1, &src, 3, 1, 0, 0);
+        assert_eq!(dst, [0x0012_3456, 0x0012_3456, 7]);
     }
 }

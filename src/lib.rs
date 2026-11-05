@@ -3,7 +3,10 @@
 mod events;
 mod image;
 mod mlx;
+mod text;
 mod window;
+mod xpm;
+mod xpm_colors;
 
 use pyo3::prelude::*;
 
@@ -21,6 +24,7 @@ fn malibx(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(window::new_window, m)?)?;
     m.add_function(wrap_pyfunction!(window::clear_window, m)?)?;
     m.add_function(wrap_pyfunction!(window::pixel_put, m)?)?;
+    m.add_function(wrap_pyfunction!(text::string_put, m)?)?;
 
     m.add_function(wrap_pyfunction!(events::hook, m)?)?;
     m.add_function(wrap_pyfunction!(events::key_hook, m)?)?;
@@ -31,5 +35,7 @@ fn malibx(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(image::get_data_addr, m)?)?;
     m.add_function(wrap_pyfunction!(image::put_image_to_window, m)?)?;
     m.add_function(wrap_pyfunction!(image::destroy_image, m)?)?;
+    m.add_function(wrap_pyfunction!(xpm::xpm_to_image, m)?)?;
+    m.add_function(wrap_pyfunction!(xpm::xpm_file_to_image, m)?)?;
     Ok(())
 }
