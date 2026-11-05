@@ -73,6 +73,8 @@ Events for `hook`:
   anything else is drawn opaque. XPM `None` pixels get alpha `0xFF`.
 - XPM colors: `#RGB`, `#RRGGBB`, `#RRRRGGGGBBBB`, `None` or an X11 color name
   (`white`, `light blue`, …). Unknown colors become black, like MiniLibX.
+- Windows get the malibx skull as their icon: the Dock icon on macOS, the
+  window icon on Linux X11. (Wayland and Windows keep the system default.)
 - Text uses a built-in 8x8 font (each character is 8 px wide); there is no
   `set_font`.
 

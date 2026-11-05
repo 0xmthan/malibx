@@ -19,7 +19,7 @@ const KEYS: [&str; 5] = ["c", "m", "s", "g", "g4"];
 const TRANSPARENT: [u8; 4] = [0, 0, 0, 0xFF];
 
 /// Parses XPM data (the contents of its quoted strings) into BGRA pixels.
-fn parse(lines: &[String]) -> Result<(usize, usize, Vec<u8>), String> {
+pub(crate) fn parse(lines: &[String]) -> Result<(usize, usize, Vec<u8>), String> {
     let mut lines = lines.iter();
     let mut next = |what: &str| lines.next().ok_or_else(|| format!("xpm: missing {what}"));
 
@@ -105,7 +105,7 @@ fn parse_hex(hex: &str) -> Option<u32> {
 }
 
 /// The quoted strings of an XPM file, with `/* */` and `//` comments removed.
-fn strings(text: &str) -> Vec<String> {
+pub(crate) fn strings(text: &str) -> Vec<String> {
     let mut out = Vec::new();
     let mut chars = text.chars().peekable();
     while let Some(c) = chars.next() {

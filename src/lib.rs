@@ -1,6 +1,7 @@
 //! malibx: a tiny window/pixel library with a MiniLibX-style API, usable from Python.
 
 mod events;
+mod icon;
 mod image;
 mod mlx;
 mod text;

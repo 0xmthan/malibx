@@ -47,6 +47,7 @@ pub(crate) fn new_window(
     let mut window = MfbWindow::new(title, size_x, size_y, WindowOptions::default())
         .map_err(|e| PyRuntimeError::new_err(format!("new_window failed: {e}")))?;
     window.set_target_fps(60);
+    crate::icon::apply(&mut window);
     let state = mlx.borrow();
     let mut inner = state.inner.borrow_mut();
     inner.windows.push(Some(WinState {
