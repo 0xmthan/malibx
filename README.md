@@ -2,18 +2,17 @@
 
 A tiny window and pixel library for Python, written in Rust, with a
 [MiniLibX](https://github.com/42Paris/minilibx-linux)-style API.
-It runs natively on macOS and Linux.
+It runs natively on macOS, Linux and Windows.
 
 ## Install
 
-Download the wheel for your platform from
-[Releases](https://github.com/0xmthan/malibx/releases), then:
-
 ```sh
-pip install malibx-<version>-cp311-abi3-<platform>.whl
+pip install malibx
 ```
 
-Wheels: Linux x86_64, macOS arm64 and macOS x86_64. They work on any Python 3.11+.
+Wheels for Linux (x86_64, arm64), macOS (arm64, x86_64) and Windows (x64), on
+any Python 3.11+. They're also attached to each
+[GitHub release](https://github.com/0xmthan/malibx/releases).
 
 ## Usage
 
@@ -57,7 +56,7 @@ Needs Rust and [uv](https://docs.astral.sh/uv/).
 
 Bump `version` in `Cargo.toml` and push to `main`. CI runs the lint and audit
 checks, and if no release exists for that version yet, it builds the wheels and
-publishes them as release `v<version>`.
+publishes them to PyPI and as GitHub release `v<version>`.
 
 ## License
 
