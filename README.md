@@ -33,12 +33,23 @@ Same names as MiniLibX.
 |---|---|---|
 | `init()` | `mlx_init` | Returns the connection handle |
 | `new_window(mlx, w, h, title)` | `mlx_new_window` | Opens a window, returns a window handle |
+| `clear_window(mlx, win)` | `mlx_clear_window` | Fills the window with black |
+| `pixel_put(mlx, win, x, y, color)` | `mlx_pixel_put` | Draws one pixel (`0xRRGGBB`) |
+| `new_image(mlx, w, h)` | `mlx_new_image` | Creates a black image |
+| `get_data_addr(img)` | `mlx_get_data_addr` | Returns `(buffer, bits_per_pixel, size_line, endian)` |
+| `put_image_to_window(mlx, win, img, x, y)` | `mlx_put_image_to_window` | Draws the image at (x, y) |
+| `destroy_image(mlx, img)` | `mlx_destroy_image` | Frees the image |
 | `loop_hook(mlx, f, param=None)` | `mlx_loop_hook` | Calls `f(param)` once per frame |
 | `loop(mlx)` | `mlx_loop` | Runs until `loop_end` is called or all windows are closed |
 | `loop_end(mlx)` | `mlx_loop_end` | Makes `loop` return |
 
-The loop runs at 60 fps. See [mlx-reference.md](mlx-reference.md) for the full
-MiniLibX API this library follows.
+- The loop runs at 60 fps. What you draw in the loop hook shows up that frame.
+- `buffer` is a writable `memoryview`: 32 bits per pixel, little endian, so
+  pixel (x, y) is 4 bytes `B, G, R, A` at `y * size_line + x * 4`.
+- Alpha is ignored for now; images are drawn opaque.
+
+See [mlx-reference.md](mlx-reference.md) for the full MiniLibX API this library
+follows. Type hints are included.
 
 ## Development
 
@@ -47,15 +58,16 @@ Needs Rust and [uv](https://docs.astral.sh/uv/).
 | Command | Does |
 |---|---|
 | `make` | Create `.venv` and build and install malibx into it |
-| `make run` | Run `examples/hello.py` |
+| `make run` | Run `examples/hello.py` (`make run EXAMPLE=draw` for `draw.py`) |
 | `make wheel` | Build a release wheel into `dist/` |
-| `make lint` | `cargo fmt --check`, `clippy` and `cargo audit` |
+| `make test` | Run the Rust unit tests |
+| `make lint` | `cargo fmt --check`, `clippy`, tests and `cargo audit` |
 | `make clean` / `fclean` | Remove build files / also remove `.venv` |
 
 ## Releasing
 
-Bump `version` in `Cargo.toml` and push to `main`. CI runs the lint and audit
-checks, and if no release exists for that version yet, it builds the wheels and
+Bump `version` in `Cargo.toml` and push to `main`. CI runs the lint, test and
+audit checks, and if no release exists for that version yet, it builds the wheels and
 publishes them to PyPI and as GitHub release `v<version>`.
 
 ## License

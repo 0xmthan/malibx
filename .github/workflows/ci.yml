@@ -10,11 +10,14 @@ permissions:
   contents: read
 
 jobs:
-  # 1. Lint, format and security audit. Runs on every push and PR.
+  # 1. Lint, format, tests and security audit. Runs on every push and PR.
   check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
@@ -23,6 +26,7 @@ jobs:
           tool: cargo-audit
       - run: cargo fmt --check
       - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo test
       - run: cargo audit
 
   # 2. Read the version from Cargo.toml and check if it's already released.
