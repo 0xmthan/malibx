@@ -17,6 +17,8 @@ pub(crate) struct WinState {
     pub(crate) height: usize,
     pub(crate) hooks: HashMap<i32, Hook>,
     pub(crate) input: InputState,
+    /// Text scale set by `set_font`: each glyph is 8 * font_scale pixels.
+    pub(crate) font_scale: i64,
 }
 
 impl WinState {
@@ -57,6 +59,7 @@ pub(crate) fn new_window(
         height: size_y,
         hooks: HashMap::new(),
         input: InputState::default(),
+        font_scale: 1,
     }));
     Ok(Window {
         id: inner.windows.len() - 1,

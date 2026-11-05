@@ -26,6 +26,7 @@ fn malibx(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(window::clear_window, m)?)?;
     m.add_function(wrap_pyfunction!(window::pixel_put, m)?)?;
     m.add_function(wrap_pyfunction!(text::string_put, m)?)?;
+    m.add_function(wrap_pyfunction!(text::set_font, m)?)?;
 
     m.add_function(wrap_pyfunction!(events::hook, m)?)?;
     m.add_function(wrap_pyfunction!(events::key_hook, m)?)?;

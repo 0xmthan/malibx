@@ -42,6 +42,7 @@ Same names as MiniLibX.
 | `xpm_file_to_image(mlx, path)` | `mlx_xpm_file_to_image` | Loads an `.xpm` file, returns `(img, width, height)` |
 | `xpm_to_image(mlx, xpm_data)` | `mlx_xpm_to_image` | Same, from a list of the XPM's strings |
 | `string_put(mlx, win, x, y, color, string)` | `mlx_string_put` | Draws text; `y` is the baseline |
+| `set_font(mlx, win, name)` | `mlx_set_font` | Text size for the window: `"8x8"` (default), `"16x16"`, … `"64x64"` |
 | `hook(win, x_event, x_mask, f, param=None)` | `mlx_hook` | Calls `f` on an X11 event (see below) |
 | `key_hook(win, f, param=None)` | `mlx_key_hook` | `f(keysym, param)` on key **release** |
 | `mouse_hook(win, f, param=None)` | `mlx_mouse_hook` | `f(button, x, y, param)` on button press |
@@ -75,8 +76,8 @@ Events for `hook`:
   (`white`, `light blue`, …). Unknown colors become black, like MiniLibX.
 - Windows get the malibx skull as their icon: the Dock icon on macOS, the
   window icon on Linux X11. (Wayland and Windows keep the system default.)
-- Text uses a built-in 8x8 font (each character is 8 px wide); there is no
-  `set_font`.
+- Text uses a built-in 8x8 font. `set_font` only scales it: `"16x16"` draws
+  each character 16 px wide, and so on in steps of 8 up to `"64x64"`.
 
 See [mlx-reference.md](mlx-reference.md) for the full MiniLibX API this library
 follows. Type hints are included.
