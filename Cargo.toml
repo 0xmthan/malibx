@@ -2,5 +2,12 @@
 name = "malibx"
 version = "0.1.0"
 edition = "2024"
+license = "MIT"
+
+[lib]
+name = "malibx"
+crate-type = ["cdylib"]
 
 [dependencies]
+minifb = "0.29.0"
+pyo3 = { version = "0.30.1", features = ["abi3-py311"] }
